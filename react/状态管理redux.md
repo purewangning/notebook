@@ -36,35 +36,36 @@ Redux适用于多交互、多数据源的场景。简单理解就是复杂环境
 
 因此我们需要从redux中暴露两个方法 `createStore`,`applyMiddleware`用于创建`store`和配合`thunk`来处理异步管理数据使用。
 
-```
+```js
     import { createStore, applyMiddleware } from 'redux'
     import thunk from 'redux-thunk
+```
 
-```
 并引入为count组件服务的reducer
-```
+```js
     import countReducer from './countReducer.js'
 ```
+
 最后调用`createStore`方法来暴露`store`
-```
+```js
     export default createStore(countReducer,applyMiddleware(thunk))
 ``` 
 
 在 `store`对象下有一些常用的内置方法
 
 获取当前时刻的store，我们可以采用getStore方法
-```
+```js
     const store = store.getStore()
 ```
 在前面我们的流程图中，我们需要通过`store`中的`dispatch`方法来派生一个`action`对象给store
-```
+```js
     store.dispatch(`action对象`)
-    例：store.dispatch({type:'xx',data:'xx'})
+    // 例：store.dispatch({type:'xx',data:'xx'})
 ```
 最后还有一个subscribe方法，这个方法可以帮组我们订阅`store`的改变，只要`store`发生改变，这个方法的回调就会执行。
 
 为了监听数据的更新，我们可以将subscribe方法绑定在组件挂载完毕生命周期函数上，但是这样，当我们的组件数量很多时，会比较麻烦，所以我们可以直接将subscribe函数用来监听整个`App`组件的变化
-```
+```js
     store.subscribe(()=>{
         ReactDOM.render(<App /> , documnent.getElementById('root'))
     })
@@ -74,7 +75,7 @@ Redux适用于多交互、多数据源的场景。简单理解就是复杂环境
 `action`是`store`中唯一的数据来源，一般来说，我们会通过调用`store.dispatch`将 action 传到 store
 
 我们需要传递的`action`是一个对象，它必须有一个type值
-```
+```js
     export const createIncrementAciton = data => ({
         type:INCREMENT,
         data
@@ -89,7 +90,7 @@ Redux适用于多交互、多数据源的场景。简单理解就是复杂环境
 reducer会根据action的指示，对state进行对应的操作，然后返回操作后的state
 
 如下，我们对接受的action中传来的type进行判断
-```
+```js
     export defaule function countReducer(preState = 0 , action){
         const { type , data } = action;
         switch( type ){
@@ -110,7 +111,7 @@ reducer会根据action的指示，对state进行对应的操作，然后返回�
 
 我们可以在`redux`目录下，创建一个 `constant`文件，这个文件用于定义我们代码中常用的一些变量。
 
-```
+```js
     export const INCREMENT = 'increment'
     export const DECREment = 'decrement
 ```
@@ -122,12 +123,12 @@ reducer会根据action的指示，对state进行对应的操作，然后返回�
 
 我们可以先尝试将它封装到`action`对象中调用
 
-```
+```js
     export const createIncrementAsyncAction = (data,time) => {
         return (dispatch) => {
             seTimeout(() => {
-                dispatch(createIncrementAction(data)
-            })
+                dispatch(createIncrementAction(data))
+            },1000)
         }
     }
 ```
@@ -140,13 +141,13 @@ reducer会根据action的指示，对state进行对应的操作，然后返回�
 
 这时候我们就需要引入中间件，在原生的`redux`中暴露出`applyMiddleware`中间件执行函数，并引入`redux-thunk`中间件(上文也有所表示)
 
-```
+```js
     import thunk from 'redux-thunk'
 ```
 
 通过第二个参数传递下去就可以
 
-```
+```js
     export default createStore(countReducer,applyMiddleware(thunk))
 ```
 

@@ -20,7 +20,7 @@
 
 要实现容器组件和UI组件的连接，我们需要借助React-Redux中的`connect`方法来实现
 
-```
+```js
     // 引入组件
     import CountUI from '../../components/Count'
     // 引入连接方法
@@ -34,7 +34,7 @@
 
 例如，当以下组件都是需要使用到`store`时，我们需要这么做，但是这样徒增了工作量，很不便利
 
-```
+```js
     <Count store={store} />
     <Demo1 store={store} />
     <Demo2 store={store} />
@@ -44,7 +44,7 @@
 
 我们可以这么做：在src目录下的`index.js`文件中，引入`Provider`，直接用`Provider`标签包裹`App`组件，将`store`写在`Provider`中即可
 
-```
+```js
     ReactDOM.render(
         <Provider store={store}>
             <App />
@@ -67,7 +67,7 @@
 
 ### mapStateToProps
 
-```
+```js
     const mapStateToProps = state => ({ count: state })
 ```
 
@@ -77,7 +77,7 @@
 
 如上面的代码，我们可以在UI组件中直接通过props来读取`count`值
 
-```
+```js
     <h1>当前求和为：{this.props.count}</h1>
 ```
 这样我们就打通了容器组件向UI组件传递状态。
@@ -87,7 +87,7 @@
 connect 接收的第二个参数是 `mapDisaptchToProps` 它是用于建立UI组件的参数到 `store.dispach` 方法的映射
 
 我们可以把参数写成对象形式，在这里定义action执行的方法，例如：
-```
+```js
     {
         increment: createIncrementAction,
         subtraction: createSubtractionAction,
@@ -105,24 +105,24 @@ connect 接收的第二个参数是 `mapDisaptchToProps` 它是用于建立UI组
 
 2.通过引用`connect`方法来连接UI组件和容器组件
 
-```
+```js
     import { connect } from 'react-redux'
     export default connect()(具体组件)
 ```
 
 3.从`action`文件中暴露创建`action`的方法
 
-```
+```js
     export const createIncrementAction = data => ({type:'increment',data}) 
 ```
 
-```
+```js
     import { createIncrementAction } from 'xxxx'
 ```
 
 4.编写reducers方法
 
-```
+```js
     export default function countReducer (proState = 0 , action){
         const {type,data} = action
         switch (type) {
@@ -137,7 +137,7 @@ connect 接收的第二个参数是 `mapDisaptchToProps` 它是用于建立UI组
 ```
 
 5.编写UI组件，通过props传递状态和方法
-```
+```js
     return(
         <div>
             <h2>当前求和：{this.props.count}</h2>
@@ -147,7 +147,7 @@ connect 接收的第二个参数是 `mapDisaptchToProps` 它是用于建立UI组
 ```
 
 6。调用`connect`包装暴露UI组件，实现容器组件向UI组件传递状态和方法
-```
+```js
     export default connect(
         state => ({ count : state}),
         { increment: createIncrementAction }
@@ -156,7 +156,7 @@ connect 接收的第二个参数是 `mapDisaptchToProps` 它是用于建立UI组
 
 ## 五、数据共享
 当我们想要用多个数据进行存储状态中时，则需要引入 redux 中的 `combineReducers` 方法用于存储。以对象的形式传入需要存储的数据。
-```
+```js
     import { createStore, applyMiddleware, combineReducers } from 'redux'
     import countReducer from './reducers/count'
     import personReducer from './reducers/person'
